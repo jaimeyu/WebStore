@@ -1,0 +1,38 @@
+revenue deets
+
+mysql> select orderNumber,inventory.pid,inventory.name,quantity,price,price*quantity as total from transaction natural join inventory natural join orderDetails;
++-------------+-----+------+----------+--------+-----------------+
+| orderNumber | pid | name | quantity | price  | total           |
++-------------+-----+------+----------+--------+-----------------+
+|           1 |   1 | Ram  |      200 |     24 |            4800 | 
+|           2 |   3 | TV   |      200 | 500.99 | 100197.99804688 | 
+|           3 |   2 | LCD  |        2 | 200.53 | 401.05999755859 | 
+|           4 |   3 | TV   |        3 | 500.99 | 1502.9699707031 | 
++-------------+-----+------+----------+--------+-----------------+
+4 rows in set (0.00 sec)
+
+list of parts usea
+
+mysql> select sum(pid) from transaction,orderDetails where transaction.orderNumber=orderDetails.orderNumber and transaction.place='store';
++----------+
+| sum(pid) |
++----------+
+|        6 | 
++----------+
+1 row in set (0.00 sec)
+
+mysql> select sum(pid) from transaction,orderDetails where transaction.orderNumber=orderDetails.orderNumber and transaction.place='online';
++----------+
+| sum(pid) |
++----------+
+|        3 | 
++----------+
+1 row in set (0.00 sec)
+
+
+select sum(pid) as Online,sum(t.pid) as Store from (select pid from transaction,orderDetails where transaction.orderNumber=orderDetails.orderNumber and transaction.place='store'  )as t, transaction,orderDetails where transaction.orderNumber=orderDetails.orderNumber and transaction.place='online';
+
+
+select sum(orderDetails.pid) as Online,sum(t.pid) as Store from (select pid from transaction,orderDetails where transaction.orderNumber=orderDetails.orderNumber and transaction.place='store'  )as t, transaction,orderDetails where transaction.orderNumber=orderDetails.orderNumber and transaction.place='online';
+
+
